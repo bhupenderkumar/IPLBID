@@ -44,8 +44,14 @@
 									<select name="week_scroll" class="form-control" id="selected"
 										name="matchid">
 										<option>Select</option>
-										<option th:each="match:${matches}" th:value="${match.id}"
-											th:text="${match.matchdesc}" th:attr="price=${match.price}" />
+										<option th:each="match:${matches}" th:value="${match.DATE}"
+											th:disabled="${match.isDisabled()}"
+											th:text="${match.isDisabled()} +'' +${match.DATE}+'-' +${match.TEAM1} +' vs ' + ${match.TEAM2} +'- ' + ${match.TIME}"
+											th:attr="price=10" />
+
+										<!-- 										<option th:each="match:${matches}" th:value="${match.id}" -->
+										<!-- 											th:text="${match.matchdesc}" th:attr="price=${match.price}" /> -->
+										<!-- 									</select> -->
 									</select>
 								</div>
 								<br>
