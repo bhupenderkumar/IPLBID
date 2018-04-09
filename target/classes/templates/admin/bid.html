@@ -28,14 +28,15 @@
 
 
 		<div class="panel-group" style="margin-top: 40px">
-			<form th:action="@{/bid/userbid}" method="post">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<span th:text="${userName}"></span>
-					</div>
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<span th:text="${userName}"></span>
+				</div>
 
-					<div class="panel-body">
 
+
+				<div class="panel-body">
+					<form th:action="@{/bid/userbid}" method="post">
 						<div class='panel-content'>
 							<div class="form-group row">
 								<label for="staticEmail" class="col-sm-2 col-form-label">Select
@@ -85,23 +86,23 @@
 								<button type="submit" class="btn">Confirm</button>
 							</div>
 						</div>
-						<div>
-							<br>
-						</div>
+					</form>
 
+					<div>
+						<br>
 					</div>
-
+					<div class="panel-content">
+						<a th:href="@{/admin/seeOtherBid}">
+							<button class="btn btn-md btn-danger btn-block">See
+								Other's Bid</button>
+						</a>
+					</div>
 				</div>
-			</form>
-			<div class="panel-content">
-				<a th:href="@{/admin/seeOtherBid}">
-					<button class="btn btn-md btn-danger btn-block">See
-						Other's Bid</button>
-				</a>
 			</div>
 		</div>
-
 	</div>
+
+
 </body>
 
 <script type="text/javascript">

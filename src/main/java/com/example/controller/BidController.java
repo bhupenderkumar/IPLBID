@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import static org.assertj.core.api.Assertions.useRepresentation;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -22,6 +24,7 @@ import com.example.model.User;
 import com.example.model.UserChoiceMatch;
 import com.example.repository.IPLTeamsRepository;
 import com.example.repository.UserBidRepository;
+import com.example.repository.UserRepository;
 
 @Controller
 @RestController
@@ -31,6 +34,9 @@ public class BidController {
 	private UserBidRepository bidRepository;
 	@Autowired
 	private IPLTeamsRepository iplTeamsRepository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@RequestMapping(value = "/bid/userbid", method = RequestMethod.POST)
 	public ModelAndView createNewUser(@Valid UserChoiceMatch choiceMatch, BindingResult bindingResult) {
@@ -52,6 +58,9 @@ public class BidController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
 		modelAndView.setViewName("admin/seeOtherBid");
+		List<User> allUsers = userRepository.findAll();
+		System.out.println("All object Size is " + allUsers.size());
+		modelAndView.addObject("allUsers", allUsers);
 		modelAndView.addObject("allBids", bidRepository.findAll());
 		return modelAndView;
 	}
