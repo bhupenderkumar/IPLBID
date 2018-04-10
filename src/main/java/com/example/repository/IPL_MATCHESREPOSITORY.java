@@ -1,5 +1,8 @@
 package com.example.repository;
 
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -7,10 +10,13 @@ import org.springframework.stereotype.Repository;
 import com.example.model.IPL_MATCHES;
 
 @Repository("IPL_MATCHESREPOSITORY")
+
 public interface IPL_MATCHESREPOSITORY extends JpaRepository<IPL_MATCHES, String> {
 
-//	@Query("select teamNames from IPLTeams where id in (select firstTeamId , secondTeamId from Matches where id=?1 ) ")
-//	public List<IPLTeams> findAll(Integer matchId);
+	// @Query("select teamNames from IPLTeams where id in (select firstTeamId ,
+	// secondTeamId from Matches where id=?1 ) ")
+	// public List<IPLTeams> findAll(Integer matchId);
 
-//	public List<IPLTeams> findById(Integer matchId);
+	// public List<IPLTeams> findById(Integer matchId);
+	public IPL_MATCHES findById(Integer matchId);
 }

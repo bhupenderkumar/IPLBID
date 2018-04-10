@@ -49,7 +49,7 @@ public class BidController {
 		if (bindingResult.hasErrors()) {
 			System.out.println(bindingResult.getAllErrors());
 		} else {
-			bidRepository.saveAndFlush(choiceMatch);
+			bidRepository.save(choiceMatch);
 			modelAndView.addObject("successMessage", "satta Created Successfully");
 			List<IPL_MATCHES> matches = iplMatchRepo.findAll();
 			modelAndView.addObject("matches", matches);
@@ -98,6 +98,9 @@ public class BidController {
 		return modelAndView;
 	}
 
+	@Autowired
+	private IPL_MATCHESREPOSITORY iplMatchRepository;
+
 	@RequestMapping(value = { "/admin/getBidedRecord" }, method = RequestMethod.POST)
 	public ModelAndView getBidedRecord(Integer matchid, Integer userId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -116,11 +119,16 @@ public class BidController {
 			userChoiceMatchs = bidRepository.findByIdAndMatchid(userId, matchid);
 		} else if (matchid > 0 && userId < 0) {
 			userChoiceMatchs = bidRepository.findByMatchid(matchid);
+
 		} else if (matchid < 0 && userId > 0) {
 			userChoiceMatchs = bidRepository.findById(userId);
+		} else {
+			userChoiceMatchs = bidRepository.findAll();
 		}
+		userChoiceMatchs.stream().forEach(userChoiceMatch -> {
+			userChoiceMatch.setIpl_MATCHES(iplMatchRepository.findById(userChoiceMatch.getMatchid()));
+		});
 
-		userChoiceMatchs = bidRepository.findAll();
 		modelAndView.addObject("allBids", userChoiceMatchs);
 		modelAndView.setViewName("admin/seeOtherBid");
 		return modelAndView;

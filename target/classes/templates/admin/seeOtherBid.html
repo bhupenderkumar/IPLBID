@@ -89,16 +89,21 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th>UserName</th>
-							<th>Match Between</th>
+							<th>UserId</th>
+							<!-- 							<th>Match Between</th> -->
 							<th>Team Selected</th>
+							<th>Price</th>
+							<!-- 							<th>Venue</th> -->
+							<!-- 							<th>Timing</th> -->
+							<th>Who Won</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="allBid : ${allBids}">
-							<td th:text="${allBid.matchid} ">
+							<td th:text="${allBid.id} ">
 							<td th:text="${allBid.teamSelection}"></td>
-							<td>john@example.com</td>
+							<td th:text="${allBid.priceSelection}"></td>
+							<td th:text="${allBid.won}"></td>
 						</tr>
 					</tbody>
 				</table>

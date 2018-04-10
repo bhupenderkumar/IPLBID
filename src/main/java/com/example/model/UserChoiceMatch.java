@@ -6,23 +6,33 @@ import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "UserChoiceMatch")
 public class UserChoiceMatch {
-
-	private Integer matchid;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
+	@Column(name = "matchid")
+	private Integer matchid;
+
+	public IPL_MATCHES getIpl_MATCHES() {
+		return ipl_MATCHES;
+	}
+
+	public void setIpl_MATCHES(IPL_MATCHES ipl_MATCHES) {
+		this.ipl_MATCHES = ipl_MATCHES;
+	}
+
+	private IPL_MATCHES ipl_MATCHES;
 	private Integer id;
 	private String price;
-	@Column(name="team_selection")
+	@Column(name = "team_selection")
 	private String teamSelection;
 	private boolean won;
 	private Integer priceSelection;
-	
 
 	public boolean isWon() {
 		return won;
@@ -74,9 +84,4 @@ public class UserChoiceMatch {
 
 }
 
-
-
-//Desigining Database 
-
-
-
+// Desigining Database

@@ -82,3 +82,4 @@ CREATE table matches (id int(10) PRIMARY KEY,price int(10),firstTeamId int(10) N
 create table ipl_matches (id Integer(10),DATE varchar(100),TEAM1 varchar(100),TEAM2 varchar(100),venue varchar(100),TIME varchar(100));
 
 
+create table UserChoiceMatch (matchid Integer(10),price Integer(100),team_selection varchar(100),whowon boolean , priceSelection Integer(100));
