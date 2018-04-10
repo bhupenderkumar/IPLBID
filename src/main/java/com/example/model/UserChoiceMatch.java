@@ -26,6 +26,7 @@ public class UserChoiceMatch {
 		this.ipl_MATCHES = ipl_MATCHES;
 	}
 
+	
 	private IPL_MATCHES ipl_MATCHES;
 	private Integer id;
 	private String price;
