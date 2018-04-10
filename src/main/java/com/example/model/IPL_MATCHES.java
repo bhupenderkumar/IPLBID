@@ -16,9 +16,18 @@ import javax.persistence.Table;
 public class IPL_MATCHES {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "DATE")
+	@Column(name = "id")
+	private Integer id;
 	String DATE;
 	String TEAM1;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getDATE() {
 		return DATE;

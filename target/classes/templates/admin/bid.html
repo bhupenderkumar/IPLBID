@@ -45,14 +45,12 @@
 									<select name="week_scroll" class="form-control" id="selected"
 										name="matchid">
 										<option>Select</option>
-										<option th:each="match:${matches}" th:value="${match.DATE}"
+										<option th:each="match:${matches}" th:value="${match.id}"
+											
+											th:if="!${match.isDisabled()}"
 											th:disabled="${match.isDisabled()}"
-											th:text="${match.isDisabled()} +'' +${match.DATE}+'-' +${match.TEAM1} +' vs ' + ${match.TEAM2} +'- ' + ${match.TIME}"
-											th:attr="price=10" />
-
-										<!-- 										<option th:each="match:${matches}" th:value="${match.id}" -->
-										<!-- 											th:text="${match.matchdesc}" th:attr="price=${match.price}" /> -->
-										<!-- 									</select> -->
+											th:text="${match.DATE}+'-' +${match.TEAM1} +' vs ' + ${match.TEAM2} +'- ' + ${match.TIME} +'-' + ${match.venue}"
+											th:attr="price=10,secondTeam=${match.TEAM2},firstTeam=${match.TEAM1}" />
 									</select>
 								</div>
 								<br>
@@ -81,7 +79,7 @@
 								<input type="hidden" th:value="${user.id}" name="id" />
 							</div>
 
-							<p th:text="${successMessage}"></p>
+							<p style="color: black" th:text="${successMessage}"></p>
 							<div class="form-actions">
 								<button type="submit" class="btn">Confirm</button>
 							</div>
@@ -118,23 +116,21 @@
 											$('#teamselect').children(
 													'option:not(:first)')
 													.remove();
-											var options = $(
-													"#selected option:selected")
-													.html().split("vs");
-											$
-													.each(
-															options,
-															function(key, value) {
-																$('#teamselect')
-																		.append(
-																				$(
-																						"<option></option>")
-																						.attr(
-																								"value",
-																								key)
-																						.text(
-																								value));
-															});
+											var firstTeam = this.options[this.selectedIndex]
+													.getAttribute('firstTeam');
+											//alert(firstTeam)
+											var secondTeam = this.options[this.selectedIndex]
+													.getAttribute('secondTeam');
+											$('#teamselect').append(
+													$("<option></option>")
+															.attr("value",
+																	firstTeam)
+															.text(firstTeam));
+											$('#teamselect').append(
+													$("<option></option>")
+															.attr("value",
+																	secondTeam)
+															.text(secondTeam));
 
 											// 									alert($(this).attr('price'))
 											var price = this.options[this.selectedIndex]

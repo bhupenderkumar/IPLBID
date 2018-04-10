@@ -39,15 +39,12 @@
 							<div class="col-sm-10">
 								<select name="week_scroll" class="form-control" id="selected"
 									name="matchid">
-									<option>Select</option>
-									<option th:each="match:${matches}" th:value="${match.DATE}"
-										th:disabled="${match.isDisabled()}"
-										th:text="${match.isDisabled()} +'' +${match.DATE}+'-' +${match.TEAM1} +' vs ' + ${match.TEAM2} +'- ' + ${match.TIME}"
-										th:attr="price=10" />
-
-									<!-- 										<option th:each="match:${matches}" th:value="${match.id}" -->
-									<!-- 											th:text="${match.matchdesc}" th:attr="price=${match.price}" /> -->
-									<!-- 									</select> -->
+									<!-- 									th:if="${match.isDisabled()}" -->
+									<!-- 										th:disabled="!${match.isDisabled()}" -->
+									<option value="-1">Select</option>
+									<option th:each="match:${matches}" th:value="${match.id}"
+										th:text="${match.DATE}+'-' +${match.TEAM1} +' vs ' + ${match.TEAM2} +'- ' + ${match.TIME} +'-' + ${match.venue}"
+										th:attr="price=10,secondTeam=${match.TEAM2},firstTeam=${match.TEAM1}" />
 								</select>
 							</div>
 
@@ -57,8 +54,8 @@
 								User</label>
 							<div class="col-sm-10">
 								<select name="week_scroll" class="form-control" id="selected"
-									name="matchid">
-									<option>Select</option>
+									name="userId">
+									<option value="-1">Select</option>
 									<option th:each="user:${allUsers}" th:value="${user.id}"
 										th:text="${user.name} +' ' +${user.lastName}" />
 

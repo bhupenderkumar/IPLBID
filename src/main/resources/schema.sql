@@ -79,6 +79,6 @@ CREATE TABLE `user_role` (
 CREATE table matches (id int(10) PRIMARY KEY,price int(10),firstTeamId int(10) NOT NULL,secondTeamId int(10) not null , whoWon int(1),matchdesc varchar(1000),matchDate Date);
 
 /*create table ipl_matches (date Date , Team1 varchar2(100),Team2 varchar2(100),venue varchar2(100),Time dateTime);*/
-create table ipl_matches (DATE varchar(100),TEAM1 varchar(100),TEAM2 varchar(100),venue varchar(100),TIME varchar(100));
+create table ipl_matches (id Integer(10),DATE varchar(100),TEAM1 varchar(100),TEAM2 varchar(100),venue varchar(100),TIME varchar(100));
 
 

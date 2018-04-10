@@ -10,6 +10,7 @@ import org.hibernate.criterion.Example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.repository.core.support.ExampleMatcherAccessor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.model.IPLTeams;
+import com.example.model.IPL_MATCHES;
 import com.example.model.User;
 import com.example.model.UserChoiceMatch;
 import com.example.repository.IPLTeamsRepository;
+import com.example.repository.IPL_MATCHESREPOSITORY;
 import com.example.repository.UserBidRepository;
 import com.example.repository.UserRepository;
+import com.example.service.UserService;
 
 @Controller
 @RestController
@@ -41,14 +45,39 @@ public class BidController {
 	@RequestMapping(value = "/bid/userbid", method = RequestMethod.POST)
 	public ModelAndView createNewUser(@Valid UserChoiceMatch choiceMatch, BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (bindingResult.hasErrors()) {
 			System.out.println(bindingResult.getAllErrors());
 		} else {
 			bidRepository.saveAndFlush(choiceMatch);
 			modelAndView.addObject("successMessage", "satta Created Successfully");
-			modelAndView.addObject("user", new User());
+			List<IPL_MATCHES> matches = iplMatchRepo.findAll();
+			modelAndView.addObject("matches", matches);
+			User user = userService.findUserByEmail(auth.getName());
+			modelAndView.addObject("user", user);
+
 		}
 		modelAndView.setViewName("admin/bid");
+		return modelAndView;
+	}
+
+	@Autowired
+	private IPL_MATCHESREPOSITORY iplMatchRepo;
+
+	@Autowired
+	private UserService userService;
+
+	@RequestMapping(value = { "/admin/bid" }, method = RequestMethod.GET)
+	public ModelAndView bid() {
+		ModelAndView modelAndView = new ModelAndView();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		List<IPL_MATCHES> matches = iplMatchRepo.findAll();
+		modelAndView.addObject("matches", matches);
+		User user = userService.findUserByEmail(auth.getName());
+		modelAndView.addObject("user", user);
+		modelAndView.addObject("userName",
+				"Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
+		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
 		return modelAndView;
 	}
 
@@ -58,11 +87,44 @@ public class BidController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
 		modelAndView.setViewName("admin/seeOtherBid");
+		List<IPL_MATCHES> matches = iplMatchRepo.findAll();
+		modelAndView.addObject("matches", matches);
 		List<User> allUsers = userRepository.findAll();
 		System.out.println("All object Size is " + allUsers.size());
 		modelAndView.addObject("allUsers", allUsers);
+		User user = userService.findUserByEmail(auth.getName());
+		modelAndView.addObject("user", user);
 		modelAndView.addObject("allBids", bidRepository.findAll());
 		return modelAndView;
+	}
+
+	@RequestMapping(value = { "/admin/getBidedRecord" }, method = RequestMethod.POST)
+	public ModelAndView getBidedRecord(Integer matchid, Integer userId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ModelAndView modelAndView = new ModelAndView();
+		User user = userService.findUserByEmail(auth.getName());
+		modelAndView.addObject("dataSelected", true);
+		List<IPL_MATCHES> matches = iplMatchRepo.findAll();
+		modelAndView.addObject("matches", matches);
+		List<User> allUsers = userRepository.findAll();
+		System.out.println("All object Size is " + allUsers.size());
+		modelAndView.addObject("allUsers", allUsers);
+		modelAndView.addObject("userName",
+				"Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
+		List<UserChoiceMatch> userChoiceMatchs = null;
+		if (matchid > 0 && userId > 0) {
+			userChoiceMatchs = bidRepository.findByIdAndMatchid(userId, matchid);
+		} else if (matchid > 0 && userId < 0) {
+			userChoiceMatchs = bidRepository.findByMatchid(matchid);
+		} else if (matchid < 0 && userId > 0) {
+			userChoiceMatchs = bidRepository.findById(userId);
+		}
+
+		userChoiceMatchs = bidRepository.findAll();
+		modelAndView.addObject("allBids", userChoiceMatchs);
+		modelAndView.setViewName("admin/seeOtherBid");
+		return modelAndView;
+		// iplTeamsRepository.findAll(example)
 	}
 
 	@RequestMapping(value = { "/admin/getTeamsByMatch" }, method = RequestMethod.GET)
