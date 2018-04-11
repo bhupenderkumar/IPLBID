@@ -14,7 +14,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +39,7 @@ public class BidController {
 	@Autowired
 	private UserBidRepository bidRepository;
 	@Autowired
-	private IPLTeamsRepository iplTeamsRepository;
+	private IPL_MATCHESREPOSITORY iplTeamsRepository;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -47,17 +49,20 @@ public class BidController {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (bindingResult.hasErrors()) {
-			System.out.println(bindingResult.getAllErrors());
+			modelAndView.setViewName("admin/bid");
 		} else {
+			IPL_MATCHES matche = iplTeamsRepository.findById(choiceMatch.getMatchid());
+			choiceMatch.setIpl_MATCHES(matche);
 			bidRepository.save(choiceMatch);
 			modelAndView.addObject("successMessage", "satta Created Successfully");
 			List<IPL_MATCHES> matches = iplMatchRepo.findAll();
 			modelAndView.addObject("matches", matches);
 			User user = userService.findUserByEmail(auth.getName());
 			modelAndView.addObject("user", user);
+			modelAndView.setViewName("admin/bid");
 
 		}
-		modelAndView.setViewName("admin/bid");
+
 		return modelAndView;
 	}
 
@@ -68,11 +73,14 @@ public class BidController {
 	private UserService userService;
 
 	@RequestMapping(value = { "/admin/bid" }, method = RequestMethod.GET)
-	public ModelAndView bid() {
+	public ModelAndView bid(Model model) {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		List<IPL_MATCHES> matches = iplMatchRepo.findAll();
 		modelAndView.addObject("matches", matches);
+//		modelAndView.addObject("userChoi", attributeValue)
+//		modelAndView.addObject("userChoiceMatch", new UserChoiceMatch());
+		model.addAttribute("userChoiceMatch", new UserChoiceMatch());
 		User user = userService.findUserByEmail(auth.getName());
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("userName",
@@ -97,9 +105,6 @@ public class BidController {
 		modelAndView.addObject("allBids", bidRepository.findAll());
 		return modelAndView;
 	}
-
-	@Autowired
-	private IPL_MATCHESREPOSITORY iplMatchRepository;
 
 	@RequestMapping(value = { "/admin/getBidedRecord" }, method = RequestMethod.POST)
 	public ModelAndView getBidedRecord(Integer matchid, Integer userId) {
@@ -126,7 +131,7 @@ public class BidController {
 			userChoiceMatchs = bidRepository.findAll();
 		}
 		userChoiceMatchs.stream().forEach(userChoiceMatch -> {
-			userChoiceMatch.setIpl_MATCHES(iplMatchRepository.findById(userChoiceMatch.getMatchid()));
+			// userChoiceMatch.setIpl_MATCHES(iplMatchRepository.findById(userChoiceMatch.getMatchid()));
 		});
 
 		modelAndView.addObject("allBids", userChoiceMatchs);
@@ -135,14 +140,16 @@ public class BidController {
 		// iplTeamsRepository.findAll(example)
 	}
 
-	@RequestMapping(value = { "/admin/getTeamsByMatch" }, method = RequestMethod.GET)
-	public List<IPLTeams> getTeamsByMatch(@Valid Integer matchid) {
-		if (matchid == null)
-			matchid = 1;
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		// return iplTeamsRepository.findById(matchid);
-		return iplTeamsRepository.findAll();
-		// iplTeamsRepository.findAll(example)
-	}
+	// @RequestMapping(value = { "/admin/getTeamsByMatch" }, method =
+	// RequestMethod.GET)
+	// public List<IPLTeams> getTeamsByMatch(@Valid Integer matchid) {
+	// if (matchid == null)
+	// matchid = 1;
+	// Authentication auth =
+	// SecurityContextHolder.getContext().getAuthentication();
+	// // return iplTeamsRepository.findById(matchid);
+	// return ipl.findAll();
+	// // iplTeamsRepository.findAll(example)
+	// }
 
 }

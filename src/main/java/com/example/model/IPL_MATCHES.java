@@ -1,24 +1,46 @@
 package com.example.model;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.example.model.UserChoiceMatch;;
 
 @Entity
 @Table(name = "ipl_matches")
 public class IPL_MATCHES {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-
 	private Integer id;
+	@OneToMany(targetEntity = UserChoiceMatch.class, mappedBy = "matchid", fetch = FetchType.EAGER)
+	List<UserChoiceMatch> userChoiceMatchs = new ArrayList<UserChoiceMatch>();
+
+	public List<UserChoiceMatch> getUserChoiceMatchs() {
+		return userChoiceMatchs;
+	}
+
+	public void setUserChoiceMatchs(List<UserChoiceMatch> userChoiceMatchs) {
+		this.userChoiceMatchs = userChoiceMatchs;
+	}
+
+	private Integer price;
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
 	String DATE;
 	String TEAM1;
 
@@ -41,7 +63,7 @@ public class IPL_MATCHES {
 	public boolean isDisabled() {
 		Date date1 = new Date();
 		String[] token = this.getDATE().split(" ");
-		System.out.println((Integer.parseInt(token[1]) < date1.getDate()));
+//		System.out.println((Integer.parseInt(token[1]) < date1.getDate()));
 		if (token[0].equals("APRIL")) {
 
 			return ((Integer.parseInt(token[1])) < date1.getDate());

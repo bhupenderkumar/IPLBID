@@ -2,13 +2,15 @@ package com.example.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import com.example.validation.OneOf;
 
 @Entity
 @Table(name = "UserChoiceMatch")
@@ -16,6 +18,8 @@ public class UserChoiceMatch {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "matchid")
+	@NotNull(message = "Please select match ")
+	@OneOf({ "select" })
 	private Integer matchid;
 
 	public IPL_MATCHES getIpl_MATCHES() {
@@ -26,14 +30,28 @@ public class UserChoiceMatch {
 		this.ipl_MATCHES = ipl_MATCHES;
 	}
 
-	
-	private IPL_MATCHES ipl_MATCHES;
+	@ManyToOne
+	@JoinColumn(name = "ipl_matches")
+	private IPL_MATCHES ipl_MATCHES = new IPL_MATCHES();
 	private Integer id;
+	@NotNull(message = "Please enter price for match")
 	private String price;
 	@Column(name = "team_selection")
+	@NotNull(message = "Please select team for bid")
+	@OneOf({ "select" })
 	private String teamSelection;
 	private boolean won;
 	private Integer priceSelection;
+
+	private String teamWon;
+
+	public String getTeamWon() {
+		return teamWon;
+	}
+
+	public void setTeamWon(String teamWon) {
+		this.teamWon = teamWon;
+	}
 
 	public boolean isWon() {
 		return won;
@@ -84,5 +102,3 @@ public class UserChoiceMatch {
 	}
 
 }
-
-// Desigining Database

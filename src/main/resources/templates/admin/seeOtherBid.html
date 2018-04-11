@@ -73,7 +73,7 @@
 			</div>
 		</form>
 		<div class="panel-content"
-			th:if="${dataSelected==null || !dataSelected}">
+			th:if="${dataSelected==null || !dataSelected} ">
 			<a th:href="@{/admin/bid}">
 				<button class="btn btn-md btn-warning btn-block">Your Bid</button>
 			</a>
@@ -86,24 +86,35 @@
 					<span th:utext="${userName}"></span>
 				</div>
 				<p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
-				<table class="table">
+				<div class="col-lg-12">
+					<div class="col-lg-4"></div>
+					<div class="col-lg-8">
+						<span style="color: blue" th:if="${#lists.size(allBids)== 0}">
+							No Data Found </span>
+					</div>
+				</div>
+				<table class="table" th:if="${#lists.size(allBids) >0}">
 					<thead>
 						<tr>
 							<th>UserId</th>
-							<!-- 							<th>Match Between</th> -->
+							<th>Match Between</th>
 							<th>Team Selected</th>
 							<th>Price</th>
-							<!-- 							<th>Venue</th> -->
-							<!-- 							<th>Timing</th> -->
+							<th>Venue</th>
+							<th>Timing</th>
 							<th>Who Won</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="allBid : ${allBids}">
-							<td th:text="${allBid.id} ">
-							<td th:text="${allBid.teamSelection}"></td>
-							<td th:text="${allBid.priceSelection}"></td>
-							<td th:text="${allBid.won}"></td>
+							<td th:text="${allBid.id} "><td
+								th:text="${allBid.ipl_MATCHES.TEAM1} +'-' + ${allBid.ipl_MATCHES.TEAM2}">
+							</td><td th:text="${allBid.teamSelection}"></td>
+							<td th:text="${allBid.ipl_MATCHES.price}"></td>
+							<td th:text="${allBid.ipl_MATCHES.venue}"></td>
+							<td th:text="${allBid.ipl_MATCHES.TIME}"></td>
+							<td>WUP</td>
+
 						</tr>
 					</tbody>
 				</table>
@@ -114,8 +125,8 @@
 					</div>
 					<div class="panel-content">
 						<a th:href="@{/admin/bid}">
-							<button class="btn btn-md btn-warning btn-block">Your
-								Bid</button>
+							<button class="btn btn-md btn-info btn-block" name="registration"
+								type="Submit">Your Bid</button>
 						</a>
 					</div>
 				</div>
