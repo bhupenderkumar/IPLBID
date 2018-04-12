@@ -1,6 +1,5 @@
 
-
-INSERT into role values(1,'ADMIN');
+delete from ipl_matches;
 
 /*insert into matches  values (1,10,1,2 ,1, 'MI vs CSK','2010-01-01');*/
 /*insert into matches  values (2,10,1,2 ,1, 'KXIP vs DD','2010-01-01');*/

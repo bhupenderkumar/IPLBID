@@ -1,15 +1,19 @@
 package com.example.controller;
 
 import static org.assertj.core.api.Assertions.useRepresentation;
+import static org.mockito.Mockito.ignoreStubs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.hibernate.criterion.Example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.core.support.ExampleMatcherAccessor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
@@ -139,11 +143,10 @@ public class BidController {
 			userChoiceMatchs.add(bidRepository.findBychoiceMatchId(choiceMatchId));
 		} else if (matchid > 0 && userId < 0) {
 			choiceMatchId.setId(null);
-			userChoiceMatchs.add(bidRepository.findBychoiceMatchId(choiceMatchId));
+			userChoiceMatchs = (bidRepository.findBychoiceMatchId(choiceMatchId.getMatchId()));
 		} else if (matchid < 0 && userId > 0) {
 			choiceMatchId.setMatchId(null);
-			userChoiceMatchs.add(bidRepository.findBychoiceMatchId(choiceMatchId));
-			// userChoiceMatchs = bidRepository.findByChoiceMatchIdId(userId);
+			userChoiceMatchs = (bidRepository.findBychoiceMatchIdId(userId));
 		} else {
 			userChoiceMatchs = bidRepository.findAll();
 		}
