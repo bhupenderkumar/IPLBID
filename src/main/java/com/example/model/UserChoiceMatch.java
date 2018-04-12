@@ -1,6 +1,11 @@
 package com.example.model;
 
+import java.io.Serializable;
+
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,19 +13,23 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+//import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.example.validation.OneOf;
+//import com.example.validation.OneOf;
+
+
 
 @Entity
 @Table(name = "UserChoiceMatch")
-public class UserChoiceMatch {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "matchid")
-	@NotNull(message = "Please select match ")
-	@OneOf({ "select" })
-	private Integer matchid;
+public class UserChoiceMatch implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@EmbeddedId
+	@AttributeOverride(name = "matchId", column = @Column(name = "matchId"))
+	UserChoiceMatchId choiceMatchId;
 
 	public IPL_MATCHES getIpl_MATCHES() {
 		return ipl_MATCHES;
@@ -33,12 +42,12 @@ public class UserChoiceMatch {
 	@ManyToOne
 	@JoinColumn(name = "ipl_matches")
 	private IPL_MATCHES ipl_MATCHES = new IPL_MATCHES();
-	private Integer id;
+
 	@NotNull(message = "Please enter price for match")
 	private String price;
 	@Column(name = "team_selection")
 	@NotNull(message = "Please select team for bid")
-	@OneOf({ "select" })
+	// @OneOf({ "select" })
 	private String teamSelection;
 	private boolean won;
 	private Integer priceSelection;
@@ -47,6 +56,16 @@ public class UserChoiceMatch {
 
 	public String getTeamWon() {
 		return teamWon;
+	}
+
+	
+
+	public UserChoiceMatchId getChoiceMatchID() {
+		return choiceMatchId;
+	}
+
+	public void setChoiceMatchID(UserChoiceMatchId choiceMatchID) {
+		this.choiceMatchId = choiceMatchID;
 	}
 
 	public void setTeamWon(String teamWon) {
@@ -67,22 +86,6 @@ public class UserChoiceMatch {
 
 	public void setPriceSelection(Integer priceSelection) {
 		this.priceSelection = priceSelection;
-	}
-
-	public Integer getMatchid() {
-		return matchid;
-	}
-
-	public void setMatchid(Integer matchid) {
-		this.matchid = matchid;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getPrice() {

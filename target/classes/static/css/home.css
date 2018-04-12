@@ -32,3 +32,17 @@ a:hover {
 	font-size: 12px;
 	color: #FF1C19;
 }
+
+.error {
+	font-style: normal;
+	font-size: 12px;
+	color: #00ff72;
+}
+
+.WonClass {
+	background-color: #FF1C19;
+}
+
+.LostClass {
+	background-color: #ff0c008f;
+}

@@ -2,6 +2,7 @@ package com.example.controller;
 
 import static org.assertj.core.api.Assertions.useRepresentation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -26,6 +27,7 @@ import com.example.model.IPLTeams;
 import com.example.model.IPL_MATCHES;
 import com.example.model.User;
 import com.example.model.UserChoiceMatch;
+import com.example.model.UserChoiceMatchId;
 import com.example.repository.IPLTeamsRepository;
 import com.example.repository.IPL_MATCHESREPOSITORY;
 import com.example.repository.UserBidRepository;
@@ -48,21 +50,32 @@ public class BidController {
 	public ModelAndView createNewUser(@Valid UserChoiceMatch choiceMatch, BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		List<IPL_MATCHES> matches = iplMatchRepo.findAll();
+		modelAndView.addObject("matches", matches);
+		User user = userService.findUserByEmail(auth.getName());
+		modelAndView.addObject("user", user);
 		if (bindingResult.hasErrors()) {
+			System.out.println("error in binding for /bid/userbid");
+			System.out.println(bindingResult.getAllErrors());
 			modelAndView.setViewName("admin/bid");
 		} else {
-			IPL_MATCHES matche = iplTeamsRepository.findById(choiceMatch.getMatchid());
-			choiceMatch.setIpl_MATCHES(matche);
-			bidRepository.save(choiceMatch);
-			modelAndView.addObject("successMessage", "satta Created Successfully");
-			List<IPL_MATCHES> matches = iplMatchRepo.findAll();
-			modelAndView.addObject("matches", matches);
-			User user = userService.findUserByEmail(auth.getName());
-			modelAndView.addObject("user", user);
+			UserChoiceMatch choiceMatchs = bidRepository.findBychoiceMatchId(choiceMatch.getChoiceMatchID());
+			// choiceMatch.getChoiceMatchID().getId(),
+			// choiceMatch.getChoiceMatchID().getMatchId());
+			if (choiceMatchs != null) {
+				modelAndView.addObject("successMessage",
+						"satta already exist for user id " + choiceMatch.getChoiceMatchID().getId() + " with match id "
+								+ choiceMatch.getChoiceMatchID().getMatchId().toString());
+			} else {
+				IPL_MATCHES matche = iplTeamsRepository.findById(choiceMatch.getChoiceMatchID().getMatchId());
+				choiceMatch.setIpl_MATCHES(matche);
+				modelAndView.addObject("successMessage",
+						"satta created for user id " + choiceMatch.getChoiceMatchID().getId() + " with match number "
+								+ choiceMatch.getChoiceMatchID().getMatchId());
+				bidRepository.save(choiceMatch);
+			}
 			modelAndView.setViewName("admin/bid");
-
 		}
-
 		return modelAndView;
 	}
 
@@ -78,8 +91,8 @@ public class BidController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		List<IPL_MATCHES> matches = iplMatchRepo.findAll();
 		modelAndView.addObject("matches", matches);
-//		modelAndView.addObject("userChoi", attributeValue)
-//		modelAndView.addObject("userChoiceMatch", new UserChoiceMatch());
+		// modelAndView.addObject("userChoi", attributeValue)
+		// modelAndView.addObject("userChoiceMatch", new UserChoiceMatch());
 		model.addAttribute("userChoiceMatch", new UserChoiceMatch());
 		User user = userService.findUserByEmail(auth.getName());
 		modelAndView.addObject("user", user);
@@ -107,7 +120,7 @@ public class BidController {
 	}
 
 	@RequestMapping(value = { "/admin/getBidedRecord" }, method = RequestMethod.POST)
-	public ModelAndView getBidedRecord(Integer matchid, Integer userId) {
+	public ModelAndView getBidedRecord(@Valid UserChoiceMatchId choiceMatchId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		ModelAndView modelAndView = new ModelAndView();
 		User user = userService.findUserByEmail(auth.getName());
@@ -119,20 +132,21 @@ public class BidController {
 		modelAndView.addObject("allUsers", allUsers);
 		modelAndView.addObject("userName",
 				"Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
-		List<UserChoiceMatch> userChoiceMatchs = null;
+		List<UserChoiceMatch> userChoiceMatchs = new ArrayList<>();
+		int matchid = choiceMatchId.getMatchId();
+		int userId = choiceMatchId.getId();
 		if (matchid > 0 && userId > 0) {
-			userChoiceMatchs = bidRepository.findByIdAndMatchid(userId, matchid);
+			userChoiceMatchs.add(bidRepository.findBychoiceMatchId(choiceMatchId));
 		} else if (matchid > 0 && userId < 0) {
-			userChoiceMatchs = bidRepository.findByMatchid(matchid);
-
+			choiceMatchId.setId(null);
+			userChoiceMatchs.add(bidRepository.findBychoiceMatchId(choiceMatchId));
 		} else if (matchid < 0 && userId > 0) {
-			userChoiceMatchs = bidRepository.findById(userId);
+			choiceMatchId.setMatchId(null);
+			userChoiceMatchs.add(bidRepository.findBychoiceMatchId(choiceMatchId));
+			// userChoiceMatchs = bidRepository.findByChoiceMatchIdId(userId);
 		} else {
 			userChoiceMatchs = bidRepository.findAll();
 		}
-		userChoiceMatchs.stream().forEach(userChoiceMatch -> {
-			// userChoiceMatch.setIpl_MATCHES(iplMatchRepository.findById(userChoiceMatch.getMatchid()));
-		});
 
 		modelAndView.addObject("allBids", userChoiceMatchs);
 		modelAndView.setViewName("admin/seeOtherBid");

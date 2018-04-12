@@ -20,16 +20,16 @@ public class IPL_MATCHES {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	@OneToMany(targetEntity = UserChoiceMatch.class, mappedBy = "matchid", fetch = FetchType.EAGER)
-	List<UserChoiceMatch> userChoiceMatchs = new ArrayList<UserChoiceMatch>();
-
-	public List<UserChoiceMatch> getUserChoiceMatchs() {
-		return userChoiceMatchs;
-	}
-
-	public void setUserChoiceMatchs(List<UserChoiceMatch> userChoiceMatchs) {
-		this.userChoiceMatchs = userChoiceMatchs;
-	}
+//	@OneToMany(targetEntity = UserChoiceMatchId.class, mappedBy = "matchid", fetch = FetchType.LAZY)
+//	List<UserChoiceMatch> userChoiceMatchs = new ArrayList<UserChoiceMatch>();
+//
+//	public List<UserChoiceMatch> getUserChoiceMatchs() {
+//		return userChoiceMatchs;
+//	}
+//
+//	public void setUserChoiceMatchs(List<UserChoiceMatch> userChoiceMatchs) {
+//		this.userChoiceMatchs = userChoiceMatchs;
+//	}
 
 	private Integer price;
 
@@ -63,7 +63,7 @@ public class IPL_MATCHES {
 	public boolean isDisabled() {
 		Date date1 = new Date();
 		String[] token = this.getDATE().split(" ");
-//		System.out.println((Integer.parseInt(token[1]) < date1.getDate()));
+		// System.out.println((Integer.parseInt(token[1]) < date1.getDate()));
 		if (token[0].equals("APRIL")) {
 
 			return ((Integer.parseInt(token[1])) < date1.getDate());
