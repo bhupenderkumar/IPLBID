@@ -20,7 +20,11 @@
 			<button class="btn btn-md btn-danger btn-block" name="registration"
 				type="Submit">Logout</button>
 		</form>
-		<p id="demo"></p>
+		<br>
+		<div class="alert alert-info text-center">
+			<strong id="demo" style="color: black"
+				class="align-center text-center validation-message"></p>
+		</div>
 		<div class="panel-group" style="margin-top: 40px">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
@@ -59,7 +63,8 @@
 
 <script>
 	// Set the date we're counting down to
-	var countDownDate = new Date("Sep 5, 2018 15:37:25").getTime();
+	var countDownDate = new Date();
+	countDownDate.setHours(11);
 
 	// Update the count down every 1 second
 	var x = setInterval(function() {
@@ -82,10 +87,7 @@
 				+ minutes + "m " + seconds + "s ";
 
 		// If the count down is finished, write some text 
-		if (distance < 0) {
-			clearInterval(x);
-			document.getElementById("demo").innerHTML = "EXPIRED";
-		}
+
 	}, 1000);
 </script>
 </html>

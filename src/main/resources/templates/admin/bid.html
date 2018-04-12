@@ -43,7 +43,7 @@
 								<label for="staticEmail" class="col-sm-2 col-form-label">Select
 									Match</label>
 								<div class="col-sm-10">
-									<select  class="form-control" id="selected"
+									<select class="form-control" id="selected"
 										name="choiceMatchID.matchId">
 										<option>Select</option>
 										<option th:each="match:${matches}" th:value="${match.id}"
@@ -51,9 +51,9 @@
 											th:disabled="${match.isDisabled()}"
 											th:text="${match.DATE}+'-' +${match.TEAM1} +' vs ' + ${match.TEAM2} +'- ' + ${match.TIME} +'-' + ${match.venue}"
 											th:attr="price=${match.price},secondTeam=${match.TEAM2},firstTeam=${match.TEAM1}" />
-									</select> 
-<!-- 									<label th:if="${#fields.hasErrors('matchid')}" -->
-<!-- 										class="validation-message">Please Select Match to bid</label> -->
+									</select>
+									<!-- 									<label th:if="${#fields.hasErrors('matchid')}" -->
+									<!-- 										class="validation-message">Please Select Match to bid</label> -->
 								</div>
 							</div>
 							<div class="form-group row">
@@ -64,8 +64,8 @@
 										name="teamSelection">
 										<option>Select</option>
 									</select>
-<!-- 									 <label th:if="${#fields.hasErrors('teamSelection')}" -->
-<!-- 										class="validation-message">Please Select Team to bid</label> -->
+									<!-- 									 <label th:if="${#fields.hasErrors('teamSelection')}" -->
+									<!-- 										class="validation-message">Please Select Team to bid</label> -->
 								</div>
 							</div>
 							<div class="form-group row">
@@ -75,10 +75,13 @@
 									<input type="text" id="optionMatchPrice" class="form-control"
 										name="price" readonly="readonly">
 								</div>
-								<input type="hidden" th:value="${user.id}" name="choiceMatchID.Id" />
+								<input type="hidden" th:value="${user.id}"
+									name="choiceMatchID.Id" />
 							</div>
 
-							<p style="color: black" th:text="${successMessage}"></p>
+							<div class="alert alert-danger" th:if="${successMessage!=null}">
+								<strong th:text="${successMessage}"></strong>
+							</div>
 							<div class="form-actions">
 								<button type="submit" class="btn">Confirm</button>
 							</div>
