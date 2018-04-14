@@ -58,28 +58,30 @@ public class BidController {
 		modelAndView.addObject("matches", matches);
 		User user = userService.findUserByEmail(auth.getName());
 		modelAndView.addObject("user", user);
-		if (bindingResult.hasErrors()) {
-			System.out.println("error in binding for /bid/userbid");
-			System.out.println(bindingResult.getAllErrors());
-			modelAndView.setViewName("admin/bid");
+		choiceMatch.getChoiceMatchID().setUser(user);
+		// choiceMatch.setIpl_MATCHES(iplMatchRepo.findById(choiceMatch.getChoiceMatchId().getMatchId()));
+		// if (bindingResult.hasErrors()) {
+		// System.out.println("error in binding for /bid/userbid");
+		// System.out.println(bindingResult.getAllErrors());
+		// modelAndView.setViewName("admin/bid");
+		// } else {
+		UserChoiceMatch choiceMatchs = bidRepository.findBychoiceMatchId(choiceMatch.getChoiceMatchID());
+		// choiceMatch.getChoiceMatchID().getId(),
+		// choiceMatch.getChoiceMatchID().getMatchId());
+		if (choiceMatchs != null) {
+			modelAndView.addObject("successMessage",
+					"satta already exist for user id " + choiceMatch.getChoiceMatchID().getId() + " with match id "
+							+ choiceMatch.getChoiceMatchID().getMatchId().toString());
 		} else {
-			UserChoiceMatch choiceMatchs = bidRepository.findBychoiceMatchId(choiceMatch.getChoiceMatchID());
-			// choiceMatch.getChoiceMatchID().getId(),
-			// choiceMatch.getChoiceMatchID().getMatchId());
-			if (choiceMatchs != null) {
-				modelAndView.addObject("successMessage",
-						"satta already exist for user id " + choiceMatch.getChoiceMatchID().getId() + " with match id "
-								+ choiceMatch.getChoiceMatchID().getMatchId().toString());
-			} else {
-				IPL_MATCHES matche = iplTeamsRepository.findById(choiceMatch.getChoiceMatchID().getMatchId());
-				choiceMatch.setIpl_MATCHES(matche);
-				modelAndView.addObject("successMessage",
-						"satta created for user id " + choiceMatch.getChoiceMatchID().getId() + " with match number "
-								+ choiceMatch.getChoiceMatchID().getMatchId());
-				bidRepository.save(choiceMatch);
-			}
-			modelAndView.setViewName("admin/bid");
+			IPL_MATCHES matche = iplTeamsRepository.findById(choiceMatch.getChoiceMatchID().getMatchId());
+			choiceMatch.setIpl_MATCHES(matche);
+			modelAndView.addObject("successMessage",
+					"satta created for user id " + choiceMatch.getChoiceMatchID().getId() + " with match number "
+							+ choiceMatch.getChoiceMatchID().getMatchId());
+			bidRepository.save(choiceMatch);
 		}
+		modelAndView.setViewName("admin/bid");
+		// }
 		return modelAndView;
 	}
 

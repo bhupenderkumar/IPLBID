@@ -15,4 +15,5 @@ public class SameDataUtil {
 	public String getUserName(Integer id) {
 		return repository.findOne(Long.valueOf(id)).getName();
 	}
+	
 }

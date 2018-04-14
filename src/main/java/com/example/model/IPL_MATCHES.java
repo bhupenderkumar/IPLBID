@@ -1,18 +1,16 @@
 package com.example.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.example.model.UserChoiceMatch;;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;;
 
 @Entity
 @Table(name = "ipl_matches")
@@ -20,18 +18,10 @@ public class IPL_MATCHES {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-//	@OneToMany(targetEntity = UserChoiceMatchId.class, mappedBy = "matchid", fetch = FetchType.LAZY)
-//	List<UserChoiceMatch> userChoiceMatchs = new ArrayList<UserChoiceMatch>();
-//
-//	public List<UserChoiceMatch> getUserChoiceMatchs() {
-//		return userChoiceMatchs;
-//	}
-//
-//	public void setUserChoiceMatchs(List<UserChoiceMatch> userChoiceMatchs) {
-//		this.userChoiceMatchs = userChoiceMatchs;
-//	}
-
 	private Integer price;
+	@OneToOne
+	@JoinColumn(name = "TEAMWONID")
+	private IPLTeams teamWon;
 
 	public Integer getPrice() {
 		return price;
@@ -41,8 +31,16 @@ public class IPL_MATCHES {
 		this.price = price;
 	}
 
-	String DATE;
-	String TEAM1;
+	@OneToOne
+	@JoinColumn(name = "TEAM1ID")
+	private IPLTeams TEAM1;
+	@OneToOne
+	@JoinColumn(name = "TEAM2ID")
+	private IPLTeams TEAM2;
+
+	// @get
+	@Temporal(TemporalType.DATE)
+	private Date DATE;
 
 	public Integer getId() {
 		return id;
@@ -52,42 +50,35 @@ public class IPL_MATCHES {
 		this.id = id;
 	}
 
-	public String getDATE() {
+	public Date getDATE() {
 		return DATE;
 	}
 
-	public void setDATE(String dATE) {
+	public void setDATE(Date dATE) {
 		DATE = dATE;
 	}
 
-	public boolean isDisabled() {
-		Date date1 = new Date();
-		String[] token = this.getDATE().split(" ");
-		// System.out.println((Integer.parseInt(token[1]) < date1.getDate()));
-		if (token[0].equals("APRIL")) {
-
-			return ((Integer.parseInt(token[1])) < date1.getDate());
-		} else if (token[0].equals("MAY")) {
-			return ((Integer.parseInt(token[1])) < date1.getDate());
-
-		}
-		return ((Integer.parseInt(token[1])) < date1.getDate());
-
+	public IPLTeams getTeamWon() {
+		return teamWon;
 	}
 
-	public String getTEAM1() {
+	public void setTeamWon(IPLTeams teamWon) {
+		this.teamWon = teamWon;
+	}
+
+	public IPLTeams getTEAM1() {
 		return TEAM1;
 	}
 
-	public void setTEAM1(String tEAM1) {
+	public void setTEAM1(IPLTeams tEAM1) {
 		TEAM1 = tEAM1;
 	}
 
-	public String getTEAM2() {
+	public IPLTeams getTEAM2() {
 		return TEAM2;
 	}
 
-	public void setTEAM2(String tEAM2) {
+	public void setTEAM2(IPLTeams tEAM2) {
 		TEAM2 = tEAM2;
 	}
 
@@ -107,7 +98,7 @@ public class IPL_MATCHES {
 		TIME = tIME;
 	}
 
-	String TEAM2;
+	// String TEAM2;
 	String venue;
 	String TIME;
 

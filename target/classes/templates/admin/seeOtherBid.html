@@ -41,7 +41,9 @@
 									<!-- 									th:if="${match.isDisabled()}" -->
 									<!-- 										th:disabled="!${match.isDisabled()}" -->
 									<option value="-1">Select</option>
-									<option th:each="match:${matches}" th:value="${match.id}"
+									<option
+										th:if="${ #dates.format(#dates.createNow(),'dd/MM/yyyy') ge #dates.format(match.DATE, 'dd/MM/yyyy')}"
+										th:each="match:${matches}" th:value="${match.id}"
 										th:text="${match.DATE}+'-' +${match.TEAM1} +' vs ' + ${match.TEAM2} +'- ' + ${match.TIME} +'-' + ${match.venue}"
 										th:attr="price=10,secondTeam=${match.TEAM2},firstTeam=${match.TEAM1}" />
 								</select>
@@ -91,35 +93,40 @@
 							No Data Found </span>
 					</div>
 				</div>
-				<table class="table" th:if="${#lists.size(allBids) >0}">
+				<table class="table"
+					th:if="${#lists.size(allBids) >0 && allBids !=null}">
 					<thead>
 						<tr>
 							<th>UserId</th>
+							<th>User Name</th>
 							<th>Match Between</th>
 							<th>Team Selected</th>
 							<th>Price</th>
 							<th>Date</th>
 							<th>Timing</th>
 							<th>Venue</th>
-							<th>Won</th>
+							<th>Team Won</th>
+							<th>You Won</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="allBid : ${allBids}"
-							th:classappend="${!allBid.won} ? 'LostClass':'WonClass'">
-							<td th:text="${allBid.choiceMatchID.Id} ">
+							th:classappend="${allBid.ipl_MATCHES.teamWon  == allBid.teamSelected}? 'LostClass':'WonClass'">
+							<td th:text="${(allBid.choiceMatchID.Id)} ">
+							<td th:text="${(allBid.choiceMatchID.user.name)} ">
 							<td
 								th:text="${allBid.ipl_MATCHES.TEAM1} +'-' + ${allBid.ipl_MATCHES.TEAM2}">
 							</td>
-							<td th:text="${allBid.teamSelection}"></td>
+							<td th:text="${allBid.teamSelected}"></td>
 							<td th:text="${allBid.ipl_MATCHES.price}"></td>
 							<td th:text="${allBid.ipl_MATCHES.DATE}"></td>
 							<td th:text="${allBid.ipl_MATCHES.TIME}"></td>
 							<td th:text="${allBid.ipl_MATCHES.venue}"></td>
-							<td th:if="${allBid.won}" class="blue"><label
-								class="validation-message">YES</label></td>
-							<td th:if="${!allBid.won}" class="error"><label
-								class="validation-message">NO</label></td>
+							<td th:if="${allBid.ipl_MATCHES.teamWon!=null}"
+								th:text="${allBid.ipl_MATCHES.teamWon}"></td>
+							<td th:if="${allBid.ipl_MATCHES.teamWon == null}">No Result</td>
+							<td
+								th:text="${allBid.ipl_MATCHES.teamWon  == allBid.teamSelected}"></td>
 
 						</tr>
 					</tbody>

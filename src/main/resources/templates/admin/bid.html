@@ -11,6 +11,7 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" th:href="@{/js/bid.js}"></script>
 </head>
 
 <body>
@@ -43,15 +44,16 @@
 								<label for="staticEmail" class="col-sm-2 col-form-label">Select
 									Match</label>
 								<div class="col-sm-10">
+									<!-- 								<input type="hidden" name="ipl_MATCHES.id" value=""/> -->
 									<select class="form-control" id="selected"
 										name="choiceMatchID.matchId">
 										<option>Select</option>
 										<option th:each="match:${matches}" th:value="${match.id}"
-											th:if="!${match.isDisabled()}"
-											th:disabled="${match.isDisabled()}"
-											th:text="${match.DATE}+'-' +${match.TEAM1} +' vs ' + ${match.TEAM2} +'- ' + ${match.TIME} +'-' + ${match.venue}"
-											th:attr="price=${match.price},secondTeam=${match.TEAM2},firstTeam=${match.TEAM1}" />
-									</select>
+											th:if="${#dates.format(match.DATE, 'dd/MM/yyyy') ge #dates.format(#dates.createNow(),'dd/MM/yyyy')}"
+											th:text="${#dates.format(match.DATE, 'dd/MM/yyyy')}+'-' +${match.TEAM1} +' vs ' + ${match.TEAM2} +'- ' + ${match.TIME} +'-' + ${match.venue}"
+											th:attr="price=${match.price},firstTeamId = ${match.TEAM1.id},secondTeamId=${match.TEAM2.id},secondTeam=${match.TEAM2},firstTeam=${match.TEAM1}" />
+									</select> <input type="hidden" th:value="${user}"
+										name="choiceMatchID.user" />
 									<!-- 									<label th:if="${#fields.hasErrors('matchid')}" -->
 									<!-- 										class="validation-message">Please Select Match to bid</label> -->
 								</div>
@@ -60,8 +62,8 @@
 								<label for="staticEmail" class="col-sm-2 col-form-label">Select
 									Team</label>
 								<div class="col-sm-10">
-									<select name="week_scroll" class="form-control" id="teamselect"
-										name="teamSelection">
+									<select name="teamSelected.id" class="form-control"
+										id="teamselect">
 										<option>Select</option>
 									</select>
 									<!-- 									 <label th:if="${#fields.hasErrors('teamSelection')}" -->
@@ -72,8 +74,8 @@
 								<label for="staticEmail" class="col-sm-2 col-form-label">Input
 									Price</label>
 								<div class="col-sm-10">
-									<input type="text" id="optionMatchPrice" class="form-control"
-										name="price" readonly="readonly">
+									<input type="text" readonly="readonly" id="optionMatchPrice" name="price"
+										class="form-control">
 								</div>
 								<input type="hidden" th:value="${user.id}"
 									name="choiceMatchID.Id" />
@@ -104,8 +106,7 @@
 
 
 </body>
-
-<script type="text/javascript">
+<script>
 	$(document)
 			.ready(
 					function() {
@@ -114,25 +115,40 @@
 										'change',
 										function() {
 
-											//getList<IPLTeams> for That match and iterate and show
+											// getList<IPLTeams> for That match and
+											// iterate and show
 											$('#teamselect').children(
 													'option:not(:first)')
 													.remove();
+											$("")
 											var firstTeam = this.options[this.selectedIndex]
 													.getAttribute('firstTeam');
-											//alert(firstTeam)
+											var firstTeamId = this.options[this.selectedIndex]
+													.getAttribute('firstTeamId');
+
 											var secondTeam = this.options[this.selectedIndex]
 													.getAttribute('secondTeam');
-											$('#teamselect').append(
-													$("<option></option>")
-															.attr("value",
-																	firstTeam)
-															.text(firstTeam));
-											$('#teamselect').append(
-													$("<option></option>")
-															.attr("value",
-																	secondTeam)
-															.text(secondTeam));
+											var secondTeamId = this.options[this.selectedIndex]
+													.getAttribute('secondTeamId');
+											$('#teamselect')
+													.append(
+															$(
+																	"<option></option>")
+																	.attr(
+																			"value",
+																			firstTeamId)
+																	.text(
+																			firstTeam));
+
+											$('#teamselect')
+													.append(
+															$(
+																	"<option></option>")
+																	.attr(
+																			"value",
+																			secondTeamId)
+																	.text(
+																			secondTeam));
 
 											var price = this.options[this.selectedIndex]
 													.getAttribute('price');
@@ -142,4 +158,6 @@
 										})
 					})
 </script>
+
+
 </html>

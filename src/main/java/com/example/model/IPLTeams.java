@@ -33,4 +33,10 @@ public class IPLTeams {
 		this.teamNames = teamNames;
 	}
 
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return this.teamNames;
+	}
+
 }
