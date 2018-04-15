@@ -3,6 +3,7 @@ package com.example.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,7 +32,7 @@ public class IPL_MATCHES {
 		this.price = price;
 	}
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "TEAM1ID")
 	private IPLTeams TEAM1;
 	@OneToOne

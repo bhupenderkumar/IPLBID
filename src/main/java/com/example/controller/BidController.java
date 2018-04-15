@@ -1,38 +1,26 @@
 package com.example.controller;
 
-import static org.assertj.core.api.Assertions.useRepresentation;
-import static org.mockito.Mockito.ignoreStubs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.hibernate.criterion.Example;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.core.support.ExampleMatcherAccessor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.model.IPLTeams;
 import com.example.model.IPL_MATCHES;
 import com.example.model.User;
 import com.example.model.UserChoiceMatch;
 import com.example.model.UserChoiceMatchId;
-import com.example.repository.IPLTeamsRepository;
 import com.example.repository.IPL_MATCHESREPOSITORY;
 import com.example.repository.UserBidRepository;
 import com.example.repository.UserRepository;
@@ -49,6 +37,40 @@ public class BidController {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@RequestMapping(value = "/bid/updateUserTable", method = RequestMethod.GET)
+	public ModelAndView updateUserTable(ModelAndView modelAndView, Model model) {
+
+		List<UserChoiceMatch> choiceMatchs = bidRepository.findAll();
+		Object[] winRecord = choiceMatchs.stream()
+				.filter(choiceMatch -> choiceMatch.getIpl_MATCHES().getTeamWon().equals(choiceMatch.getTeamSelected()))
+				.toArray();
+		Object[] lostRecord = choiceMatchs.stream()
+				.filter(choiceMatch -> !choiceMatch.getIpl_MATCHES().getTeamWon().equals(choiceMatch.getTeamSelected()))
+				.toArray();
+		int howManyWin = winRecord.length;
+		int howManyLost = lostRecord.length;
+		System.out.println(howManyLost);
+		System.out.println(howManyWin);
+
+		// choiceMatchs.stream().forEach(choiceMatch ->{
+		// if(choiceMatch.getIpl_MATCHES().getTeamWon().equals(choiceMatch.getTeamSelected()))
+		// {
+		// howManyWin = howManyWin +1;
+		// }
+		// else{
+		//
+		// }
+		//
+		//
+		// });
+
+		choiceMatchs.stream()
+				.filter(choiceMatch -> choiceMatch.getIpl_MATCHES().getTeamWon().equals(choiceMatch.getTeamSelected()));
+
+		modelAndView.setViewName("/admin/home");
+		return modelAndView;
+	}
 
 	@RequestMapping(value = "/bid/userbid", method = RequestMethod.POST)
 	public ModelAndView createNewUser(@Valid UserChoiceMatch choiceMatch, BindingResult bindingResult) {
@@ -94,6 +116,7 @@ public class BidController {
 	@RequestMapping(value = { "/admin/bid" }, method = RequestMethod.GET)
 	public ModelAndView bid(Model model) {
 		ModelAndView modelAndView = new ModelAndView();
+//		updateUserTable(modelAndView, model);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		List<IPL_MATCHES> matches = iplMatchRepo.findAll();
 		modelAndView.addObject("matches", matches);

@@ -39,4 +39,9 @@ public class IPLTeams {
 		return this.teamNames;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return this.id == ((IPLTeams) obj).id;
+	}
+
 }

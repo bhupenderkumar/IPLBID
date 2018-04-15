@@ -111,7 +111,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="allBid : ${allBids}"
-							th:classappend="${allBid.ipl_MATCHES.teamWon  == allBid.teamSelected}? 'LostClass':'WonClass'">
+							th:classappend="${allBid.ipl_MATCHES.teamWon  == allBid.teamSelected}? 'LostClass':''">
 							<td th:text="${(allBid.choiceMatchID.Id)} ">
 							<td th:text="${(allBid.choiceMatchID.user.name)} ">
 							<td

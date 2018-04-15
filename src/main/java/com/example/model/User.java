@@ -51,6 +51,16 @@ public class User {
 		return id;
 	}
 
+	private Long price;
+
+	public Long getPrice() {
+		return price;
+	}
+
+	public void setPrice(Long price) {
+		this.price = price;
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
