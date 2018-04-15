@@ -16,6 +16,7 @@ insert into ipl_teams values(7,'Kings XI Punjab');
 insert into ipl_teams values(8,'Sunrisers Hyderabad');
 
 
+
   insert into ipl_matches(id,date,team1id,team2id,venue,time,price)  values (1,'2018-04-7',2,1,'Mumbai','8:00 PM',10);
   insert into ipl_matches(id,date,team1id,team2id,venue,time,price)  values (2,'2018-04-8',3,7,'Delhi','4:00 PM',10);
   insert into ipl_matches(id,date,team1id,team2id,venue,time,price)  values (3,'2018-04-8',4,5,'Kolkata','8:00 PM',10);
