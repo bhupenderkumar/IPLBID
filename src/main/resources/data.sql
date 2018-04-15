@@ -1,3 +1,4 @@
+INSERT INTO `role` VALUES (1,'ADMIN');
 delete from user_choice_match;
 delete from ipl_matches;
 
